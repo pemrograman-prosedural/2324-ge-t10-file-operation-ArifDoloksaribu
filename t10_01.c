@@ -77,7 +77,7 @@ int main(int _argc, char **_argv)
             student_print_all_detail(student, sj);
         } else if (strcmp(masukan, "dorm-print-all-detail") == 0) {
             dorm_print_all_detail(dorm, i);
-        } 
+        }     
     }
 
     free(dorm);
