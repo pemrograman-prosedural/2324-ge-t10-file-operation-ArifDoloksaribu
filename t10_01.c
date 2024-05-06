@@ -33,13 +33,14 @@ int main(int _argc, char **_argv)
         strcpy(student[sj].year, token);
 
         token = strtok(NULL, "|");
-        student[sj].gender = (strcmp(token, "female") == 0) ? GENDER_FEMALE : GENDER_MALE;
 
-        student[sj] = create_student(
-            student[sj].id,
-            student[sj].name,
-            student[sj].year,
-            student[sj].gender);
+        if(strcmp(token,"female\n")==0){
+            student[sj].gender = GENDER_FEMALE;
+        }else{
+            student[sj].gender = GENDER_MALE;
+        }
+
+        student[sj] = create_student(student[sj].id,student[sj].name,student[sj].year,student[sj].gender);
 
         sj++;
     }
@@ -56,12 +57,9 @@ int main(int _argc, char **_argv)
         dorm[i].capacity = atoi(token);
 
         token = strtok(NULL, "|");
-        dorm[i].gender = (strcmp(token, "female") == 0) ? GENDER_FEMALE : GENDER_MALE;
+        dorm[i].gender = (strcmp(token, "female\n") == 0) ? GENDER_FEMALE : GENDER_MALE;
 
-        dorm[i] = create_dorm(
-            dorm[i].name,
-            dorm[i].capacity,
-            dorm[i].gender);
+        dorm[i] = create_dorm(dorm[i].name,dorm[i].capacity, dorm[i].gender);
 
         i++;
     }
