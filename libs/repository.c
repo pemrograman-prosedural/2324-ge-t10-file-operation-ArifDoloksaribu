@@ -60,6 +60,7 @@ struct dorm_t create_dorm(char *_name, unsigned short _capacity, enum gender_t _
     strcpy(dorm.name, _name);
     dorm.capacity = _capacity;
     dorm.gender = _gender;
+    dorm.residents_num = 0;
     return dorm;
     }
 
