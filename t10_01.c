@@ -11,78 +11,115 @@
 
 int main(int _argc, char **_argv)
 {
-    // Alokasi memori
+    // codes
     struct dorm_t *dorm = malloc(100 * sizeof(struct dorm_t));
     struct student_t *student = malloc(100 * sizeof(struct student_t));
-
     int i = 0;
-    int sj = 0;
+
+    char masukan[100], *argument, *token;
+    int h = 0;
 
     FILE *op = fopen("./storage/student-repository.txt", "r");
 
     char line[200];
     while (fgets(line, sizeof(line), op) != NULL) {
-        char *token = strtok(line, "|");
+       token = strtok(line, "|");
 
-        strcpy(student[sj].id, token);
-
-        token = strtok(NULL, "|");
-        strcpy(student[sj].name, token);
+        strcpy(student[i].id, token);
 
         token = strtok(NULL, "|");
-        strcpy(student[sj].year, token);
+        strcpy(student[i].name, token);
+
+        token = strtok(NULL, "|");
+        strcpy(student[i].year, token);
 
         token = strtok(NULL, "|");
 
         if(strcmp(token,"female\n")==0){
-            student[sj].gender = GENDER_FEMALE;
+            student[i].gender = GENDER_FEMALE;
         }else{
-            student[sj].gender = GENDER_MALE;
+            student[i].gender = GENDER_MALE;
         }
-
-        student[sj] = create_student(student[sj].id,student[sj].name,student[sj].year,student[sj].gender);
-
-        sj++;
+        student[i] = create_student(student[i].id,student[i].name,student[i].year,student[i].gender);
+        i++;
     }
     fclose(op);
 
     FILE *ap = fopen("./storage/dorm-repository.txt", "r");
 
     while (fgets(line, sizeof(line), ap) != NULL) {
-        char *token = strtok(line, "|");
+        token = strtok(line, "|");
 
-        strcpy(dorm[i].name, token);
-
-        token = strtok(NULL, "|");
-        dorm[i].capacity = atoi(token);
+        strcpy(dorm[h].name, token);
 
         token = strtok(NULL, "|");
-        dorm[i].gender = (strcmp(token, "female\n") == 0) ? GENDER_FEMALE : GENDER_MALE;
+        dorm[h].capacity = atoi(token);
 
-        dorm[i] = create_dorm(dorm[i].name,dorm[i].capacity, dorm[i].gender);
+        token = strtok(NULL, "|");
+        dorm[h].gender = (strcmp(token, "female\n") == 0) ? GENDER_FEMALE : GENDER_MALE;
 
-        i++;
+         dorm[h] = create_dorm(dorm[h].name,dorm[h].capacity, dorm[h].gender);
+        h++;
     }
     fclose(ap);
 
-    
-    char masukan[100];
     while (1) {
-        fgets(masukan, sizeof(masukan), stdin);
-        masukan[strcspn(masukan, "\n")] = '\0'; 
-
+        fgets(masukan, 100, stdin);
+        masukan[strcspn(masukan, "\n")] = 0;
         if (strcmp(masukan, "---") == 0) {
             break;
-        } else if (strcmp(masukan, "student-print-all-detail") == 0) {
-            student_print_all_detail(student, sj);
-        } else if (strcmp(masukan, "dorm-print-all-detail") == 0) {
-            dorm_print_all_detail(dorm, i);
-        }     
-    }
+        } else if (strcmp(masukan, "dorm-print-all") == 0) {
+            print_dorms(dorm, h);
+            continue;
+        }
+        else if (strcmp(masukan, "student-print-all") == 0) {
+            print_stu(student, i);
+            continue;
+        }
+        else if(strcmp(masukan, "student-print-all-detail") == 0) {
+            student_print_all_detail(student, i);
+            continue;
+        }
+        else if(strcmp(masukan, "dorm-print-all-detail") == 0) {
+            dorm_print_all_detail(dorm, h);
+            continue;
+        }
+        argument = strtok(masukan, "#");
+        if (strcmp(argument, "dorm-add") == 0) {
+            token = strtok(NULL, "#");
+            strcpy(dorm[h].name, token);
+            token = strtok(NULL, "#");
+            dorm[h].capacity = atoi(token);
+            token = strtok(NULL, "#");
+            if (strcmp(token, "male") == 0) {
+                dorm[h].gender = GENDER_MALE;
+            } else {
+                dorm[h].gender = GENDER_FEMALE;
+            }
+            
+            dorm[h] = create_dorm(dorm[h].name, dorm[h].capacity, dorm[h].gender);
 
+            h++;
+        }
+         else if (strcmp(argument, "student-add") == 0){
+            token = strtok(NULL, "#");
+            strcpy(student[i].id, token);
+            token = strtok(NULL, "#");
+            strcpy(student[i].name, token);
+            token = strtok(NULL, "#");
+            strcpy(student[i].year, token);
+            token = strtok(NULL, "#");
+            if (strcmp(token, "male") == 0) {
+                 student[i].gender = GENDER_MALE;
+            } else {
+                student[i].gender = GENDER_FEMALE;
+            }
+             student[i] = create_student(student[i].id, student[i].name, student[i].year, student[i].gender);
+
+            i++;
+    }
+    }
     free(dorm);
     free(student);
-
     return 0;
 }
-
